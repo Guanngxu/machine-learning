@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 alpha = 0.001  # 学习率
-max_iteration = 5000  # 最大迭代次数
+iteration = 5000  # 迭代次数
 
 
 def load_data():
@@ -27,7 +27,7 @@ def load_data():
     # 删除最后一列，即删除标签列
     df.drop('class', axis=1, inplace=True)
 
-    # 添加一列，当b吧
+    # 添加一列，当b吧，方便计算，初始化为1
     df['new'] = 1
     X_train = np.mat(df)
     return X_train, Y_train
@@ -44,7 +44,7 @@ def gradient_descent(X_train, Y_train):
     W = np.zeros((col, 1))
 
     # 进行max_iteration次梯度下降
-    for i in range(max_iteration):
+    for i in range(iteration):
         # 直接使用numpy提供的tanh函数
         h = np.tanh(np.dot(X_train, W))
         error = Y_train + h
@@ -54,6 +54,7 @@ def gradient_descent(X_train, Y_train):
     return W.getA()
 
 
+# 这段代码来抄自https://github.com/apachecn/MachineLearning/blob/master/src/py2.x/ML/5.Logistic/logistic.pyu
 def plot_show(W):
     X_train, Y_train = load_data()
     xcord1 = []
@@ -77,6 +78,12 @@ def plot_show(W):
     ax.scatter(xcord2, ycord2, s=20, c='green', alpha=.5)
 
     x = np.arange(-4.0, 5.0, 0.1)
+    """
+    函数原型是：f(x) = w0*x0 + w1*x1 + b
+    x1在这里被当做y值了，f(x)被算到w0、w1、b身上去了
+    所以有：w0*x0 + w1*x1 + b = 0
+    可以得到：(b + w0 * x) / -w1
+    """
     y = (W[2] + W[0] * x) / -W[1]
 
     ax.plot(x, y)
